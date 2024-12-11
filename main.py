@@ -1,9 +1,13 @@
 import google.generativeai as genai
 from pyppeteer import launch
 import asyncio
-import config #Create a config.py and paste in your API key as API_KEY = "YOUR_API_KEY"
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
+print(os.getenv('API_KEY'))
 url = input("Please enter the review url: ")
+
 
 async def scrape_reviews(url):
     reviews = []
@@ -42,7 +46,7 @@ def summarize(reviews, model):
     response = model.generate_content(review_text)
     print(response)
 
-genai.configure(api_key=config.API_KEY)
+genai.configure(api_key=os.getenv('API_KEY'))
 model = genai.GenerativeModel('gemini-1.5-flash-latest')
 
 reviews = asyncio.run(scrape_reviews(url))
@@ -50,3 +54,4 @@ reviews = asyncio.run(scrape_reviews(url))
 
 
 summarize(reviews, model)
+
